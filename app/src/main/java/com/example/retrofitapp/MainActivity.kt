@@ -10,8 +10,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import androidx.navigation.navArgument
 import com.example.retrofitapp.api.CharacterDetailsScreen
 import com.example.retrofitapp.api.CharacterListScreen
+import com.example.retrofitapp.ui.theme.RetrofitAppTheme
 import com.example.retrofitapp.viewmodel.APIViewModel
 
 class MainActivity : ComponentActivity() {
@@ -19,6 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val myViewModel by viewModels<APIViewModel>()
         setContent {
+
             RetrofitAppTheme {
                 Surface(
                     color = MaterialTheme.colorScheme.background
@@ -43,7 +46,6 @@ fun MainContent(myViewModel: APIViewModel) {
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                backgroundColor = MaterialTheme.colors.primarySurface
             ) {
                 BottomNavigation {
                     bottomNavItems.forEach { item ->
@@ -54,16 +56,16 @@ fun MainContent(myViewModel: APIViewModel) {
                                 Icon(
                                     painter = item.icon,
                                     contentDescription = item.label,
-                                    tint = MaterialTheme.colors.onPrimary
                                 )
                             },
-                            label = { Text(text = item.label) }
+
                         )
                     }
                 }
             }
         }
     ) {
+
         NavHost(navController, startDestination = "characters") {
             composable("characters") {
                 CharacterListScreen(
@@ -78,13 +80,12 @@ fun MainContent(myViewModel: APIViewModel) {
             ) { backStackEntry ->
                 val characterId = backStackEntry.arguments?.getInt("characterId")
                 if (characterId != null) {
-                    val character = myViewModel.characters.find { it.id == characterId }
+                    val character = myViewModel.characters.id { it.id == characterId }
                     if (character != null) {
                         CharacterDetailsScreen(character = character)
                     }
                 }
             }
-            // Add more composable destinations as needed
         }
     }
 }

@@ -68,6 +68,8 @@ dependencies {
     //CORRUTINES
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     //GLIDE
+    implementation ("androidx.navigation:navigation-compose:2.7.5")
+
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
