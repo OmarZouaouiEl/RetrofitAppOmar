@@ -1,34 +1,35 @@
+// CharacterListScreen.kt
 package com.example.retrofitapp.api
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.MutableLiveData
 import com.example.retrofitapp.model.Character
-import com.example.retrofitapp.model.Data
 
 @Composable
 fun CharacterListScreen(
-    characters: MutableLiveData<Data>,
+    characters: List<Character>,
     onCharacterClick: (Character) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         Text(
             text = "Character List",
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(16.dp)
         )
         LazyColumn {
-            items(  characters) { character ->
-                CharacterListItem(character = character, onCharacterClick)
+            items(characters) { character ->
+                CharacterListItem(character = character, onCharacterClick = onCharacterClick)
             }
         }
     }
@@ -50,10 +51,10 @@ fun CharacterListItem(
         ) {
             Text(
                 text = character.name,
-                style = MaterialTheme.typography.subtitle1
+                style = MaterialTheme.typography.h6
             )
             Text(
-                text = character.description,
+                text = character.uniqueTraits.joinToString(", "),
                 style = MaterialTheme.typography.body2
             )
         }

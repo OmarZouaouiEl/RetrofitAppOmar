@@ -1,36 +1,29 @@
+// APIViewModel.kt
 package com.example.retrofitapp.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.retrofitapp.api.Repository
-import com.example.retrofitapp.model.Data
-import kotlinx.coroutines.CoroutineScope
+import com.example.retrofitapp.model.Character
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class APIViewModel: ViewModel() {
+class APIViewModel : ViewModel() {
 
     private val repository = Repository()
-    private val _loading = MutableLiveData(true)
-    val loading = _loading
-    private val _characters = MutableLiveData<Data>()
-    val characters = _characters
+    val characters: MutableLiveData<List<Character>> = MutableLiveData()
 
-    fun getCharacters(){
-        CoroutineScope(Dispatchers.IO).launch {
+    init {
+        getCharacters()
+    }
+
+    private fun getCharacters() {
+        viewModelScope.launch(Dispatchers.IO) {
             val response = repository.getAllCharacters()
-            withContext(Dispatchers.Main) {
-                if(response.isSuccessful){
-                    _characters.value = response.body()
-                    _loading.value = false
-                }
-                else{
-                    Log.e("Error :", response.message())
-                }
+            if (response.isSuccessful) {
+                characters.postValue(response.body()?.characters ?: emptyList())
             }
         }
     }
-
 }
